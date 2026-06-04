@@ -10,7 +10,7 @@ model=GoogleGenerativeAI(
     model="gemini-2.5-flash",
     temperature=0.7,
     google_api_key=key
-)
+) 
 
 paper_input = st.selectbox( "Select Research Paper Name",
                            ["Attention Is All You Need",
@@ -31,14 +31,23 @@ length_input = st.selectbox( "Select Explanation Length",
 
 template= load_prompt("template.json")
 
-prompt = template.invoke({
-    "paper_input": paper_input,
-    "style_input": style_input,
-    "length_input":length_input
-})
+# prompt = template.invoke({
+#     "paper_input": paper_input,
+#     "style_input": style_input,
+#     "length_input":length_input
+# })
 
-st.header("research Tool")
+# st.header("research Tool")
+
+# if st.button("Summerize"):
+#     result = model.invoke(prompt)
+#     st.write(result)
 
 if st.button("Summerize"):
-    result = model.invoke(prompt)
+    chain = template | model
+    result = chain.invoke({
+        "paper_input":paper_input,
+        "style_input":style_input,
+        "length_input":length_input
+    })
     st.write(result)
